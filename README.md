@@ -15,18 +15,17 @@ A lean, CPU-friendly notebook (`stock_price_prediction_with_LSTM.ipynb`) that pr
 ## Quick Start
 
 ### 1 · Clone & install
-code
-git clone https://github.com/<your-user>/lstm-aapl-forecast.git
-cd lstm-aapl-forecast
+```
+git clone https://github.com/iamfaham/stock-price-prediction-LSTM.git
+cd stock-price-prediction-LSTM
 python -m venv .venv
 source .venv/bin/activate         # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-code
+```
 
 ### 2 · Run
-code
-jupyter notebook stock_price_prediction_with_LSTM.ipynb
-code
+```
+jupyter notebook stock-price-prediction-LSTM.ipynb
+```
 
 Full run (10 epochs) finishes in ≈ 1 minute on a typical laptop CPU.
 
