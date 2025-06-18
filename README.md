@@ -1,93 +1,62 @@
-# Stock-Price Prediction with LSTM
+# LSTM Stock-Price Forecaster
 
-A concise, CPU-friendly notebook (`stock_price_prediction_with_LSTM.ipynb`) that demonstrates how stacked LSTM networks can forecast daily closing prices for a chosen stock ticker.
-
----
-
-## Table of Contents
-1. Features  
-2. Quick Start  
-3. Project Structure  
-4. Notebook Walk-through  
-5. Results Snapshot  
-6. Next Steps  
-7. License  
+A lean, CPU-friendly notebook (`stock_price_prediction_with_LSTM.ipynb`) that predicts next-day closing prices for Apple (AAPL) using a stacked LSTM.
 
 ---
 
 ## Features
-* **End-to-end pipeline** – data download, scaling, sequence prep, model training, evaluation, future forecasting.  
-* **Stacked LSTM** – captures both short and mid-term temporal dependencies.  
-* **Visual diagnostics** – training-loss curves, predicted-vs-actual plot, future forecast.  
-* **Minimal dependencies** – TensorFlow/Keras, pandas, yfinance, scikit-learn.
+* **End-to-end pipeline** – data download → scaling → sequence prep → training → prediction → plot.  
+* **Compact model** – two 50-unit LSTMs, one dense hidden layer (≈ 32 k params).  
+* **Look-back window** – 60 trading days.  
+* **Zero heavy dependencies** – just TensorFlow/Keras, yfinance, and scikit-learn.
 
 ---
 
 ## Quick Start
 
-### 1 · Clone and install
+### 1 · Clone & install
 code
-git clone https://github.com/<your-user>/lstm-stock-forecast.git
-cd lstm-stock-forecast
+git clone https://github.com/<your-user>/lstm-aapl-forecast.git
+cd lstm-aapl-forecast
 python -m venv .venv
-source .venv/bin/activate      # Windows: .venv\Scripts\activate
+source .venv/bin/activate         # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 code
 
-### 2 · Run the notebook
+### 2 · Run
 code
 jupyter notebook stock_price_prediction_with_LSTM.ipynb
 code
 
-> **Tip:** The full run (20 epochs) takes < 2 minutes on a typical laptop CPU.
-
----
-
-## Project Structure
-code
-lstm-stock-forecast/
-│
-├─ stock_price_prediction_with_LSTM.ipynb   ← Main notebook
-├─ requirements.txt                         ← Package list
-└─ README.md                                ← You are here
-code
+Full run (10 epochs) finishes in ≈ 1 minute on a typical laptop CPU.
 
 ---
 
 ## Notebook Walk-through
 
-| Section | Purpose |
-|---------|---------|
-| **1 Fetch data** | Pull 10+ years of OHLCV data via `yfinance`. |
-| **2 EDA** | Trend & volatility plots for sanity check. |
-| **3 Split & scale** | Chronological 80/20 split, MinMax scaling. |
-| **4 Sequence build** | Convert to `(samples, 60, 1)` tensors. |
-| **5 Model** | Two LSTM layers + dense output. |
-| **6 Training** | Adam, MSE loss, early-stopping. |
-| **7 Evaluation** | RMSE, R² on test data. |
-| **8 Forecast** | Next-30-day projection. |
-| **Conclusion** | Take-aways & upgrade ideas. |
+| Step | What happens |
+|------|--------------|
+| **0 Setup** | Install yfinance & TensorFlow |
+| **1 Imports** | Load libraries |
+| **2 Fetch data** | Daily AAPL closes 2015-2025 |
+| **3 Scale & split** | 80 % train / 20 % test, MinMax 0-1 |
+| **4 Windowing** | 60-day sequences |
+| **5 Model** | 50-50 LSTM + Dense-25 + Dense-1 |
+| **6 Training** | 10 epochs, batch 64 |
+| **7 Predict** | Inverse-scale outputs |
+| **8 Plot** | Train vs Test vs Predicted |
 
 ---
 
 ## Results Snapshot
-| Metric | Value |
-|--------|-------|
-| RMSE (USD) | ~ 1.45 |
-| R² Score | 0.95 |
-| Forecast horizon | 30 trading days |
+The forecast line tracks the unseen test data, with noticeable lag on sharp price spikes — expected for autoregressive single-feature LSTMs.
 
-The model tracks price direction well, though it lags during sudden jumps (a common LSTM trait).
+*(Compute RMSE/MAE in the notebook for a numeric score.)*
 
 ---
 
 ## Next Steps
-* **Feature enrichment** – add technical indicators or macro-economic signals.  
-* **Model variants** – try GRU, CNN-LSTM, or Transformer encoders.  
-* **Hyper-parameter search** – automate tuning with Keras-Tuner or Optuna.  
-* **Production** – wrap scaler + model in FastAPI for real-time inference.
-
----
-
-## License
-Released under the MIT License – see `LICENSE` for details.
+* Add technical indicators or macro features.  
+* Increase epochs & tune batch size.  
+* Swap in GRU or Transformer encoders for longer context.  
+* Serve via FastAPI for real-time inference.
